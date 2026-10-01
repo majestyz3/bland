@@ -94,8 +94,26 @@ The provider intentionally keeps one-shot operations such as placing calls, publ
 
 ## Interview walkthrough
 
-See [DEMO_SCRIPT.md](./DEMO_SCRIPT.md) for the concise talk track and recovery plan.
+See [DEMO_SCRIPT.md](./DEMO_SCRIPT.md) for the concise talk track and recovery plan, and [REHEARSAL_CHECKLIST.md](./REHEARSAL_CHECKLIST.md) for the exact night-before / interview-day checklist.
 
 ## Provider maturity
 
 The provider supports the modern V2 Agent lifecycle plus shared Bland configuration resources and read-only discovery data sources. The interview demo uses a deliberately small subset with well-documented public APIs so the live walkthrough stays deterministic.
+
+
+## CI confidence
+
+GitHub Actions validates this repository with the real provider binary and a deterministic mock Bland API. The workflow performs the complete lifecycle:
+
+```text
+provider test + vet + build
+→ local provider install
+→ terraform fmt
+→ terraform init
+→ terraform validate
+→ terraform apply
+→ zero-diff terraform plan
+→ terraform destroy
+```
+
+This proves the Terraform/provider integration without requiring a real Bland API key in CI.
