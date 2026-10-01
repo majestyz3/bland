@@ -10,7 +10,7 @@ Show the two repos:
 
 ## Live sequence
 
-1. Run `./scripts/preflight.sh`.
+1. Run `bash scripts/preflight.sh`.
 2. Run `terraform plan`.
 3. Point out the resources:
    - V2 agent container
