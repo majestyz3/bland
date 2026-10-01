@@ -1,0 +1,46 @@
+name: validate-demo
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout demo
+        uses: actions/checkout@v4
+
+      - name: Checkout provider
+        uses: actions/checkout@v4
+        with:
+          repository: majestyz3/terraform-provider-bland
+          path: terraform-provider-bland
+
+      - name: Setup Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.23.x'
+          cache: true
+          cache-dependency-path: terraform-provider-bland/go.sum
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Build and install local provider
+        env:
+          PROVIDER_SOURCE_DIR: terraform-provider-bland
+        run: bash scripts/install-provider.sh
+
+      - name: Terraform format
+        run: terraform fmt -check -recursive
+
+      - name: Terraform init
+        run: terraform init -backend=false -input=false
+
+      - name: Terraform validate
+        run: terraform validate
