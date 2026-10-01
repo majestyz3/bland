@@ -44,3 +44,31 @@ jobs:
 
       - name: Terraform validate
         run: terraform validate
+
+      - name: Start mock Bland API
+        run: |
+          python3 scripts/mock_bland.py >/tmp/mock-bland.log 2>&1 &
+          echo $! >/tmp/mock-bland.pid
+          sleep 1
+
+      - name: Terraform apply against mock API
+        env:
+          BLAND_API_KEY: ci-test-key
+          BLAND_BASE_URL: http://127.0.0.1:18080
+        run: terraform apply -auto-approve
+
+      - name: Idempotency check against mock API
+        env:
+          BLAND_API_KEY: ci-test-key
+          BLAND_BASE_URL: http://127.0.0.1:18080
+        run: terraform plan -detailed-exitcode
+
+      - name: Terraform destroy against mock API
+        env:
+          BLAND_API_KEY: ci-test-key
+          BLAND_BASE_URL: http://127.0.0.1:18080
+        run: terraform destroy -auto-approve
+
+      - name: Show mock API log on failure
+        if: failure()
+        run: cat /tmp/mock-bland.log || true
