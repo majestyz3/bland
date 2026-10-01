@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-./scripts/preflight.sh
+bash scripts/preflight.sh
 
 echo
 echo "=== PLAN ==="
