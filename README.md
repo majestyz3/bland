@@ -51,7 +51,7 @@ git clone https://github.com/majestyz3/terraform-provider-bland.git
 git clone https://github.com/majestyz3/bland.git
 
 cd bland
-./scripts/install-provider.sh
+bash scripts/install-provider.sh
 ```
 
 Set your Bland key:
@@ -65,7 +65,7 @@ export BLAND_API_KEY="YOUR_KEY"
 Run:
 
 ```bash
-./scripts/preflight.sh
+bash scripts/preflight.sh
 terraform init
 terraform plan -out=demo.tfplan
 terraform apply demo.tfplan
