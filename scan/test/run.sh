@@ -2,6 +2,7 @@
 # Full lifecycle test of scan/ against the V2 mock API. No real Bland calls.
 set -euo pipefail
 cd "$(dirname "$0")/.."
+terraform init -backend=false -input=false >/dev/null
 PORT=18081
 export BLAND_API_KEY=mock-test-key BLAND_BASE_URL="http://127.0.0.1:$PORT"
 export TF_VAR_source_snapshot_path="test/fixtures/agent_latest.json"
