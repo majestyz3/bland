@@ -57,8 +57,13 @@ class H(BaseHTTPRequestHandler):
             return self.send(202, {"id": r, "status": "PENDING"})
         if p == "/v1/knowledge/learn":
             if b.get("type") != "text" or not b.get("text"): VIOLATIONS.append("bad KB body")
-            i = "kb_" + nid()[:8]; S["kb"][i] = {"id": i, "status": "COMPLETED", "name": b.get("name")}
-            return self.send(200, S["kb"][i])
+            i = nid(); S["kb"][i] = {"id": i, "status": "COMPLETED", "name": b.get("name")}
+            return self.send(200, {
+                "knowledge_base_id": i,
+                "message": "TEXT KB creation started successfully",
+                "success": True,
+                "version_id": nid(),
+            })
         if p == "/v1/evals/agents":
             i, v = nid(), nid()
             S["evals"][i] = {"id": i, "name": b.get("name"), "current_version_id": v, "active_version_id": None}
