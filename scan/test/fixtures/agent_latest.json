@@ -1,0 +1,21 @@
+{
+  "data": {
+    "id": "11111111-2222-3333-4444-555555555555",
+    "name": "Fixture export",
+    "snapshot": {
+      "behavior": {
+        "nodes": [
+          {"id": "inbound", "type": "inbound", "data": {"number": null}},
+          {"id": "agent", "type": "agent", "data": {"prompt": "<p>Front door. Route only.</p>"}},
+          {"id": "zone-1", "type": "auth-zone", "data": {"name": "02 — Authenticate Member", "flow": {"nodes": [{"id": "idq-1", "type": "identityQuestions", "data": {"questions": [{"ask": "What is your SCAN member ID?", "expected": "SCAN-DEMO-1001"}, {"ask": "And what is your date of birth?", "expected": "10/30/1994 (October 30, 1994)"}, {"ask": "First and last name?", "expected": "Majid Zarkesh"}], "tools": [{"name": "Escalate", "transfer_to": "+12025550100"}]}}], "edges": []}}},
+          {"id": "svc-03", "type": "scenario", "parentId": "zone-1", "data": {"name": "03 — Member Services", "tools": [{"code": "const idOk = id.endsWith('DEMO1001'); const dobOk = dob === '10301994' || dob === '19941030'; member_first_name: 'Majid', member_name: 'Majid Zarkesh'"}]}}
+        ],
+        "edges": [{"source": "inbound", "target": "agent"}]
+      },
+      "settings": {"displayName": "SCAN Member Services", "systemPrompt": "Tone rules", "memory": {"enabled": false}, "guardrails": []},
+      "contact": {"inboundNumbers": []},
+      "knowledge": {"kbIds": ["kb_source_fixture_0001"]}
+    }
+  },
+  "errors": null
+}

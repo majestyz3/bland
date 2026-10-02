@@ -1,119 +1,31 @@
-# Bland Terraform Interview Demo
+# Bland Terraform demo
 
-This repository is the runnable demo configuration for the companion provider:
+Terraform configurations for the SCAN Member Services interview demo, using the companion provider [terraform-provider-bland](https://github.com/majestyz3/terraform-provider-bland).
 
-- Provider: https://github.com/majestyz3/terraform-provider-bland
-- Demo: this repository
-
-It declaratively builds a synthetic **SCAN Member Services** experience for the Bland AI Solutions Engineering interview.
-
-## What Terraform creates
-
-- A Bland V2 Agent container named `SCAN Member Services - Terraform Demo`
-- A text knowledge-base item containing synthetic member/benefit data
-- A conversational pathway that demonstrates:
-  - required disclosure with interruptions blocked
-  - member ID + DOB authentication
-  - benefits/member-service questions
-  - replacement ID-card flow
-  - simulated escalation
-  - graceful end-call behavior
-
-The demo intentionally does **not** buy phone numbers, place calls, send SMS, or transfer to a real person during `terraform apply`.
-
-## Synthetic demo member
-
-| Field | Value |
+| Path | What it is |
 |---|---|
-| Name | Maria Demo |
-| Member ID | SCAN-DEMO-1001 |
-| DOB | 01/15/1952 |
-| Plan | SCAN Classic Demo Plan |
-| PCP copay | $0 |
-| Specialist copay | $15 |
-| Replacement ID card | Eligible; simulated request completes in demo |
+| [`scan/`](./scan) | **Main demo.** A brand-new Bland V2 agent with the full SCAN build: deterministic disclosure, three-factor auth zone, gated member services and ID card pathways, escalation, guardrails, knowledge base, five judges, six test cases, a staging release gate, and a staging release. |
+| repo root (`main.tf`) | Small legacy example: a V2 agent container, a knowledge base, and a V1 conversational pathway. Kept because CI exercises it and it shows the older API surface. |
 
-No real PHI or customer data is used.
+No real PHI. The synthetic test member is `SCAN-DEMO-1001`, DOB `10/30/1994`, Majid Zarkesh (the demo builder). Nothing creates phone numbers, places calls, sends SMS, or transfers to a real person.
 
-## One-time setup
-
-Requirements:
-
-- Go 1.23+
-- Terraform 1.6+
-- Git
-- A Bland API key
-
-Clone both repositories next to each other:
+## Setup
 
 ```bash
 git clone https://github.com/majestyz3/terraform-provider-bland.git
 git clone https://github.com/majestyz3/bland.git
-
 cd bland
-bash scripts/install-provider.sh
+bash scripts/install-provider.sh     # provider tests, vet, build, local install
+export BLAND_API_KEY="..."
 ```
 
-Set your Bland key:
+Then follow [`scan/README.md`](./scan/README.md).
 
-```bash
-export BLAND_API_KEY="YOUR_KEY"
-```
+## CI
 
-## Demo flow
+GitHub Actions builds the provider from source and runs two jobs with no real Bland key:
 
-Run:
+- **root:** fmt, init, validate, apply, zero-diff plan, destroy against `scripts/mock_bland.py`
+- **scan:** fmt, init, validate, then `scan/test/run.sh` against `scan/test/mock_bland_v2.py` (apply, zero-diff plan, release change, snapshot and safety assertions, check-run script, destroy)
 
-```bash
-bash scripts/preflight.sh
-terraform init
-terraform plan -out=demo.tfplan
-terraform apply demo.tfplan
-terraform plan
-```
-
-The final `terraform plan` should report no configuration changes.
-
-Show the outputs:
-
-```bash
-terraform output
-```
-
-Then open the Bland dashboard and show the objects Terraform created.
-
-## Reset
-
-The resources in this repository are designed to be safe to recreate:
-
-```bash
-terraform destroy
-```
-
-The provider intentionally keeps one-shot operations such as placing calls, publishing/promoting versions, and running tests outside normal Terraform desired state.
-
-## Interview walkthrough
-
-See [DEMO_SCRIPT.md](./DEMO_SCRIPT.md) for the concise talk track and recovery plan, and [REHEARSAL_CHECKLIST.md](./REHEARSAL_CHECKLIST.md) for the exact night-before / interview-day checklist.
-
-## Provider maturity
-
-The provider supports the modern V2 Agent lifecycle plus shared Bland configuration resources and read-only discovery data sources. The interview demo uses a deliberately small subset with well-documented public APIs so the live walkthrough stays deterministic.
-
-
-## CI confidence
-
-GitHub Actions validates this repository with the real provider binary and a deterministic mock Bland API. The workflow performs the complete lifecycle:
-
-```text
-provider test + vet + build
-→ local provider install
-→ terraform fmt
-→ terraform init
-→ terraform validate
-→ terraform apply
-→ zero-diff terraform plan
-→ terraform destroy
-```
-
-This proves the Terraform/provider integration without requiring a real Bland API key in CI.
+See [DEMO_SCRIPT.md](./DEMO_SCRIPT.md) for the talk track and [REHEARSAL_CHECKLIST.md](./REHEARSAL_CHECKLIST.md) for tonight.

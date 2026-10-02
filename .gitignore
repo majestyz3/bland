@@ -5,3 +5,6 @@
 *.tfplan
 crash.log
 .DS_Store
+scan/exports/*.json
+scan/test/*.log
+scan/test/terraform.tfstate*

@@ -1,0 +1,50 @@
+SCAN DEMO MEMBER BENEFITS KB
+DEMO DATA ONLY. Every plan name, benefit amount, network name, and phone reference in this source is synthetic and was created for an interview demonstration. None of it is real SCAN Health Plan information. Production content would come from SCAN-approved Evidence of Coverage and member-services documentation reviewed by SCAN Compliance.
+
+GROUNDING RULE (applies to every answer)
+If the requested information cannot be supported by authenticated member data or approved knowledge-base content, say that the information cannot be verified and offer human assistance. Never estimate, round, or infer a benefit, cost, coverage decision, provider, pharmacy, or eligibility.
+
+SECTION 1: PLAN OVERVIEW (DEMO PLAN: SCAN Demo Advantage)
+Q: What plan is this knowledge base for?
+A: SCAN Demo Advantage, a synthetic Medicare Advantage style demo plan. Benefits below apply only to members whose verified profile shows plan_name "SCAN Demo Advantage".
+Q: Did my plan change for next year?
+A: The assistant must answer this only from the member's verified profile field plan_changed. If plan_changed is false, say: "Your verified record shows no change to your plan for the coming plan year." If plan_changed is true or missing, say the details cannot be confirmed by phone automation and offer Member Services.
+
+SECTION 2: DEMO BENEFITS (SCAN Demo Advantage, DEMO DATA)
+Q: What is my primary care visit copay?
+A: DEMO DATA: $0 copay for in-network primary care visits.
+Q: What is my specialist visit copay?
+A: DEMO DATA: $15 copay for in-network specialist visits.
+Q: Do I have dental coverage?
+A: DEMO DATA: Preventive dental (two cleanings and exams per year) at $0 in-network. Comprehensive dental amounts are not in this knowledge base, so the assistant must offer Member Services for those questions.
+Q: Do I have vision coverage?
+A: DEMO DATA: One routine eye exam per year at $0 in-network, plus a $150 annual eyewear allowance.
+Q: Do I have a fitness benefit?
+A: DEMO DATA: Yes, a DemoFit gym membership at participating locations at no cost.
+Q: What about experimental, investigational, or unlisted treatments?
+A: Coverage for experimental or investigational treatment is NOT described in this knowledge base. The assistant must not estimate any payment amount. It must say it cannot verify that information and offer to connect the member with Member Services, where a coverage determination can be requested.
+
+SECTION 3: ID CARD REPLACEMENT
+Q: How do I replace a lost or damaged member ID card?
+A: After the caller's identity is verified, the virtual assistant can submit a replacement ID card request. The replacement is mailed to the address on file. DEMO DATA: standard delivery is 7 to 10 business days. The assistant gives the member the confirmation number returned by the system. The assistant cannot change the mailing address; address changes go to Member Services.
+Q: Can I use my plan before the new card arrives?
+A: DEMO DATA: Yes. Coverage does not depend on having the physical card. Providers can verify eligibility with the member ID.
+
+SECTION 4: PHARMACY
+Q: Which pharmacies are in network?
+A: DEMO DATA: SCAN Demo Advantage uses the DemoRx Network. Synthetic in-network examples: DemoRx Pharmacy (Main Street), SampleCare Drug (Oak Avenue), and TestWell Pharmacy (mail order). The assistant must only name pharmacies listed here. For any other pharmacy, it must say it cannot verify network status and offer Member Services.
+Q: Is my specific medication covered?
+A: Drug-level coverage (formulary tier, prior authorization, quantity limits) is NOT in this knowledge base. The assistant must not guess and must offer Member Services or the pharmacy help line.
+
+SECTION 5: ENROLLMENT (ANNUAL ENROLLMENT PERIOD)
+Q: When can I change plans?
+A: DEMO DATA: The Medicare Annual Enrollment Period runs October 15 through December 7 each year, with changes taking effect January 1.
+Q: Which plan should I choose? / Am I eligible for a different plan?
+A: The virtual assistant does not give plan recommendations or eligibility determinations. Those conversations require a licensed SCAN sales agent or Member Services representative. The assistant should offer to connect the caller.
+
+SECTION 6: MEDICAL QUESTIONS
+Q: Can the assistant tell me what is wrong or what treatment I need?
+A: No. The virtual assistant handles plan administration only and cannot give medical advice, diagnoses, or treatment recommendations. For symptoms, contact your doctor or a nurse line. For an emergency, call 911. The assistant can offer to connect the caller with Member Services.
+
+SECTION 7: UNSUPPORTED QUESTIONS
+If a question is not answered in this knowledge base and is not answered by the verified member profile, the assistant must say: "I don't have verified information to answer that confidently. I can connect you with Member Services."

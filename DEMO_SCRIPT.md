@@ -1,61 +1,27 @@
-# Interview Demo Script
+# Terraform demo script (bonus segment, about 3 minutes)
 
-## 90-second setup story
+Only run this if you're ahead of time. The dashboard demo is the main event.
 
-“I built the Bland experience first to learn the platform. Then I noticed the existing Terraform provider was based on an older API surface, so I wrote a new provider from scratch against Bland's current public APIs. This repo is the consumer side: it reproduces the SCAN member-services demo declaratively.”
+## Setup line
 
-Show the two repos:
-- `terraform-provider-bland` — provider implementation
-- `bland` — actual Terraform configuration using it
+"I built the SCAN agent in the UI first to learn the platform. Then I asked how a platform team would manage fifty of these, so I wrote a Terraform provider against Bland's current public API. This repo uses it to stand up the same agent from scratch."
 
-## Live sequence
+## Sequence
 
-1. Run `bash scripts/preflight.sh`.
-2. Run `terraform plan`.
-3. Point out the resources:
-   - V2 agent container
-   - synthetic knowledge-base item
-   - conversational pathway
-4. Run `terraform apply`.
-5. Run `terraform output` and show the generated IDs.
-6. Open Bland and show the matching objects.
-7. Run `terraform plan` again and highlight the clean/no-change result.
+1. Show `scan/` in the editor: `agent.tf`, `judges.tf`, `gate.tf`, `release.tf`. One line each.
+2. Show the already-applied result: `terraform output`, then open the `dashboard.canvas` link. Same five-step agent, created by code.
+3. The change: `terraform plan -var 'release_note=v1.1 tighter benefits wording'`. Point out that only the version and the staging release change.
+4. Apply it (or show the pre-run apply), then `bash scripts/run-staging-checks.sh`. Narrate the per-judge verdicts as they land.
+5. Open Environments: "Terraform stages it, Bland's judges gate it, and a person promotes it. I deliberately left production promotion out of the default flow."
 
-## What to say about the flow
+## Lines worth having ready
 
-The pathway demonstrates:
+- "The UI is where you build. Terraform is where you standardize and review."
+- "Agent versions are immutable in Bland's API, so every change is a new version. That maps cleanly onto Terraform."
+- "Nothing in here can buy a number, place a call, or promote to production by default."
+- If asked who wrote it: "I designed it and tested it; I used an AI coding assistant heavily for the Go, same as I'd expect your engineers to."
 
-1. **Required disclosure** — per-node interruptibility is set to `0`, so the disclosure finishes before interruption.
-2. **Authentication** — extracts member ID and DOB and requires both synthetic values.
-3. **Grounded member servicing** — benefits are constrained to fictional SCAN demo data.
-4. **Replacement ID card** — simulates submission without pretending a real fulfillment system was called.
-5. **Escalation** — intentionally simulated; no real person or transfer destination is configured.
-6. **End call** — closes cleanly.
+## Recovery
 
-Synthetic credentials:
-
-- Maria Demo
-- `SCAN-DEMO-1001`
-- `01/15/1952`
-
-## Architecture answer
-
-“Terraform owns durable configuration. I deliberately did not model calls, SMS sends, publishing, test executions, or other one-shot actions as ordinary resources because a repeat `terraform apply` should never accidentally trigger real-world activity.”
-
-## If live API creation misbehaves
-
-Do not debug blindly in front of the interviewer.
-
-1. Show the Terraform plan and provider code.
-2. Show GitHub Actions passing for the provider.
-3. Show the Bland objects from the previously successful rehearsal.
-4. Explain that the provider uses only documented public endpoints and that the failing operation is isolated by resource.
-5. Continue with the architecture discussion.
-
-## Cleanup
-
-After rehearsal—not immediately before the interview unless you intend to recreate everything:
-
-```bash
-terraform destroy
-```
+- Apply fails live: switch to the dashboard-built agent. Everything you need to show already exists there.
+- Check run hangs: open Evaluations, Runs, and show the existing CI run from the dashboard agent.
