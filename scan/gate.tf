@@ -9,7 +9,7 @@ resource "bland_agent_checks" "staging" {
     evals = [for k, j in local.judges : {
       eval_agent_id         = bland_eval_agent.judge[k].id
       eval_agent_version_id = bland_eval_agent_publish.judge[k].active_version_id
-      target_level_keys     = []
+      target_level_keys     = ["meets_criteria"]
       required              = j.required
     }]
     enabled           = true
