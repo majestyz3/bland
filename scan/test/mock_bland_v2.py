@@ -38,11 +38,21 @@ class H(BaseHTTPRequestHandler):
             if not snap.get("knowledge", {}).get("kbIds"): VIOLATIONS.append("no kbIds in snapshot")
             text = json.dumps(snap)
             if "kb_source_fixture_0001" in text: VIOLATIONS.append("source KB id leaked into new snapshot")
-            v = nid(); S["versions"][v] = {"id": v, "agent_id": m.group(1), "name": b.get("name"), "snapshot": snap}
+            v = nid(); S["versions"][v] = {
+                "id": v,
+                "agent_id": m.group(1),
+                "name": b.get("name"),
+                "kind": "manual",
+                "created_at": "2026-10-02T00:00:00Z",
+                "semver": None,
+                "snapshot": snap,
+            }
             return self.send(201, {"version": S["versions"][v]})
         m = re.fullmatch(r"/v2/agents/([^/]+)/publish", p)
         if m:
             S["envs"][m.group(1)]["staging"] = b.get("version_id")
+            if b.get("version_id") in S["versions"]:
+                S["versions"][b.get("version_id")]["semver"] = "0.1.0"
             return self.send(201, {"semver": "0.1.0", "environments": self.envs(m.group(1)), "warnings": []})
         m = re.fullmatch(r"/v2/agents/([^/]+)/promote", p)
         if m:
@@ -129,8 +139,23 @@ class H(BaseHTTPRequestHandler):
             if not run: return self.nf()
             vs = [{"name": S["evals"][e["eval_agent_id"]]["name"], "required": e["required"], "match_rate": 1.0, "score": 92.0, "passed": True} for e in run["cfg"]["evals"]]
             return self.send(200, {"id": run["id"], "status": "PASSED", "overall_passed": True, "verdicts": vs})
+        m = re.fullmatch(r"/v2/agents/([^/]+)/versions", p)
+        if m:
+            if m.group(1) not in S["agents"]: return self.nf()
+            versions = [
+                {k: v.get(k) for k in ("id", "agent_id", "name", "kind", "created_at", "semver")}
+                for v in S["versions"].values()
+                if v.get("agent_id") == m.group(1)
+            ]
+            return self.send(200, versions)
         m = re.fullmatch(r"/v2/agents/([^/]+)/versions/([^/]+)", p)
-        if m: return self.send(200, S["versions"][m.group(2)]) if m.group(2) in S["versions"] else self.nf()
+        if m:
+            if not re.fullmatch(r"\d+\.\d+\.\d+", m.group(2)):
+                return self.send(400, {"error": "INVALID_VERSION", "message": "version must be a semantic version like 1.2.0"})
+            for v in S["versions"].values():
+                if v.get("agent_id") == m.group(1) and v.get("semver") == m.group(2):
+                    return self.send(200, v)
+            return self.nf()
         m = re.fullmatch(r"/v2/agents/([^/]+)/environments/([^/]+)/checks", p)
         if m: return self.send(200, S["checks"][m.group(1) + m.group(2)]) if m.group(1) + m.group(2) in S["checks"] else self.nf()
         m = re.fullmatch(r"/v2/agents/([^/]+)/environments", p)
